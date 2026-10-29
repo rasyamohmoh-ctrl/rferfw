@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NetQuiz — Cisco Packet Tracer</title>
+<style>
+:root{--bg:#080d1d;--panel:rgba(18,28,55,.88);--line:rgba(151,176,255,.2);--text:#f5f7ff;--muted:#b6c2e4;--cyan:#55e6ff;--violet:#a78bfa;--pink:#ff76c8;--green:#5cf2b1;--red:#ff718b}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--text);background:radial-gradient(ellipse at 15% 10%,#182b59 0,transparent 38%),radial-gradient(ellipse at 90% 85%,#351b58 0,transparent 36%),var(--bg);overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;background-image:linear-gradient(rgba(130,160,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(130,160,255,.08) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(to bottom,black,transparent)}
+.wrap{width:min(920px,92%);margin:0 auto;padding:28px 0 40px;position:relative}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.4px}
+.logo{width:44px;height:44px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,var(--cyan),var(--violet));color:#081023;font-size:22px;box-shadow:0 0 28px #55e6ff33}
+.tag{font-size:12px;color:var(--cyan);border:1px solid #55e6ff55;background:#55e6ff10;padding:8px 12px;border-radius:99px}
+.hero{text-align:center;margin:35px auto 28px;max-width:680px;animation:rise .6s ease both}
+.eyebrow{color:var(--cyan);font-size:12px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase}
+h1{font-size:clamp(32px,6vw,54px);line-height:1.08;margin:14px 0;background:linear-gradient(100deg,#fff 15%,var(--cyan) 55%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);line-height:1.7;margin:0 auto;max-width:560px}
+.card{background:linear-gradient(145deg,rgba(22,34,66,.94),rgba(12,19,40,.94));border:1px solid var(--line);border-radius:26px;padding:clamp(20px,4vw,34px);box-shadow:0 22px 70px #0005, inset 0 1px #ffffff0a;backdrop-filter:blur(16px);animation:rise .5s ease both}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:26px 0}
+.feature{padding:15px 10px;border:1px solid var(--line);border-radius:17px;background:#ffffff05;text-align:center}
+.feature b{display:block;font-size:20px;margin-bottom:5px;color:var(--cyan)}.feature span{font-size:12px;color:var(--muted)}
+button{font:inherit;cursor:pointer;border:0;transition:transform .18s ease,filter .18s ease,background .18s ease}
+button:hover{transform:translateY(-2px);filter:brightness(1.1)}button:active{transform:scale(.98)}
+.primary{width:100%;padding:16px 20px;border-radius:15px;font-weight:800;color:#071023;background:linear-gradient(100deg,var(--cyan),#9cf4ed 45%,var(--violet));box-shadow:0 10px 30px #55e6ff25}
+.small-note{text-align:center;color:#8998c2;font-size:12px;margin:15px 0 0}
+.quiz-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
+.counter{color:var(--muted);font-size:13px;font-weight:700}
+.progress{height:7px;border-radius:99px;background:#ffffff12;overflow:hidden;margin:10px 0 0}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));border-radius:99px;transition:width .35s ease}
+.timer{width:62px;height:62px;flex:none;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--cyan) 360deg,#ffffff12 0);font-size:20px;font-weight:900;color:#fff}
+.timer:before{content:"";position:absolute;inset:5px;border-radius:50%;background:#101a35}.timer span{position:relative}.timer.urgent{background:conic-gradient(var(--red) 360deg,#ffffff12 0);color:var(--red);animation:pulse .7s infinite alternate}
+.question-label{color:var(--violet);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;font-weight:800}
+h2{font-size:clamp(21px,4vw,29px);line-height:1.4;margin:10px 0 22px}
+.answers{display:grid;gap:12px}
+.answer{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:15px 16px;color:var(--text);border-radius:15px;border:1px solid #9cb2f52b;background:linear-gradient(100deg,#ffffff08,#ffffff03);line-height:1.45}
+.answer .letter{width:34px;height:34px;flex:none;display:grid;place-items:center;border-radius:10px;background:#8fa7ff16;border:1px solid #a8baff35;color:var(--cyan);font-weight:900}
+.answer:hover{border-color:#55e6ff9c;background:#55e6ff0d}
+.answer.selected{border-color:var(--cyan);background:linear-gradient(100deg,#55e6ff22,#a78bfa18);box-shadow:0 0 0 2px #55e6ff14}
+.answer.correct{border-color:var(--green);background:#5cf2b117}.answer.wrong{border-color:var(--red);background:#ff718b15}
+.answer.correct .letter{background:#5cf2b12b;color:var(--green)}.answer.wrong .letter{background:#ff718b2b;color:var(--red)}
+.answer:disabled{cursor:default;transform:none;filter:none}
+.feedback{margin-top:16px;padding:14px 16px;border-radius:14px;background:#ffffff08;border:1px solid var(--line);color:var(--muted);line-height:1.55}
+.feedback strong{color:var(--text)}
+.quiz-bottom{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:22px}
+.hint{font-size:12px;color:#91a0c8}
+.next{padding:13px 20px;border-radius:13px;background:linear-gradient(100deg,var(--violet),var(--pink));color:#0b1022;font-weight:900;min-width:145px}
+.result{text-align:center}.trophy{font-size:58px;filter:drop-shadow(0 0 20px #ffce5b44)}
+.score{font-size:clamp(52px,10vw,78px);font-weight:950;margin:12px 0;background:linear-gradient(100deg,var(--cyan),var(--violet),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+.result p{color:var(--muted);line-height:1.7}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px 0}
+.stat{padding:16px 8px;border:1px solid var(--line);border-radius:16px;background:#ffffff05}.stat b{display:block;font-size:24px}.stat span{font-size:12px;color:var(--muted)}
+.review{margin-top:22px;text-align:left}.review h3{margin-bottom:12px}.review-item{border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0;background:#ffffff04}.review-item p{margin:7px 0;font-size:14px}.good{color:var(--green)}.bad{color:var(--red)}
+.hidden{display:none!important}
+footer{text-align:center;color:#6f7da5;font-size:12px;margin-top:24px}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{to{transform:scale(1.06);filter:brightness(1.25)}}
+@media(max-width:560px){.wrap{padding-top:18px}.tag{font-size:10px}.features{gap:7px}.feature{padding:12px 5px}.feature b{font-size:17px}.feature span{font-size:10px}.quiz-top{align-items:flex-start}.timer{width:56px;height:56px}.answer{padding:12px}.quiz-bottom{align-items:stretch;flex-direction:column}.next{width:100%}.hint{text-align:center}.stats{gap:6px}.stat{padding:13px 4px}.stat b{font-size:20px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="brand"><div class="logo">N</div><div>NetQuiz <span style="color:var(--cyan)">/</span> <span style="color:#b9c4e5;font-weight:600">Cisco</span></div></div><div class="tag">● MODE LATIHAN</div></header>
+<section id="intro" class="hero">
+<div class="eyebrow">Network knowledge challenge</div>
+<h1>Uji Skill Jaringanmu</h1>
+<p>Asah pemahaman Cisco Packet Tracer lewat kuis interaktif. Jawab setiap soal sebelum waktu habis dan lihat hasilmu di akhir.</p>
+<div class="card" style="text-align:left;margin-top:28px">
+<div class="features"><div class="feature"><b>13 dtk</b><span>Setiap soal</span></div><div class="feature"><b>15</b><span>Pertanyaan</span></div><div class="feature"><b>0–100</b><span>Skor akhir</span></div></div>
+<button class="primary" id="startBtn">Mulai Kuis <span aria-hidden="true">→</span></button>
+<p class="small-note">Siapkan fokusmu. Timer dimulai setelah kamu menekan tombol.</p>
+</div>
+</section>
+<section id="quiz" class="card hidden">
+<div class="quiz-top"><div style="flex:1"><div class="counter" id="counter">SOAL 1 DARI 15</div><div class="progress"><div id="progressFill" class="progress-fill"></div></div></div><div class="timer" id="timer"><span id="timeText">13</span></div></div>
+<div class="question-label" id="category">DASAR JARINGAN</div><h2 id="question">Pertanyaan</h2>
+<div class="answers" id="answers"></div>
+<div id="feedback" class="feedback hidden" aria-live="polite"></div>
+<div class="quiz-bottom"><div class="hint" id="hint">Pilih satu jawaban yang paling tepat.</div><button class="next hidden" id="nextBtn">Soal Berikutnya →</button></div>
+</section>
+<section id="result" class="card result hidden"></section>
+<footer>Dibuat untuk latihan belajar • Materi berdasarkan Modul Cisco Packet Tracer</footer>
+</div>
+<script>
+const questions = [
+{c:"Pengenalan",q:"Apa fungsi utama Cisco Packet Tracer?",a:["Mengedit foto dan video","Membuat serta menyimulasikan topologi jaringan secara virtual","Meningkatkan kecepatan internet secara otomatis","Mengganti sistem operasi komputer"],k:1,e:"Packet Tracer digunakan untuk merancang, mengonfigurasi, dan menyimulasikan jaringan tanpa perangkat fisik."},
+{c:"Konsep Jaringan",q:"Apa yang dimaksud dengan IP Address?",a:["Nama aplikasi untuk membuat jaringan","Kabel yang menghubungkan perangkat","Alamat untuk mengidentifikasi perangkat dalam jaringan","Perintah untuk menghapus konfigurasi"],k:2,e:"IP Address adalah alamat yang digunakan untuk mengidentifikasi perangkat dalam jaringan komputer."},
+{c:"Konsep Jaringan",q:"Apa kegunaan subnet mask?",a:["Menentukan bagian network dan host pada IP Address","Mengubah router menjadi switch","Mengukur panjang kabel","Menyimpan file simulasi"],k:0,e:"Subnet mask membantu menentukan bagian network dan bagian host dari sebuah IP Address."},
+{c:"Konsep Jaringan",q:"Routing adalah proses untuk…",a:["Membuat ikon perangkat","Menghapus alamat IP","Mematikan semua switch","Menentukan jalur data menuju jaringan lain"],k:3,e:"Routing menentukan jalur yang digunakan data untuk berpindah dari satu jaringan ke jaringan lainnya."},
+{c:"Antarmuka",q:"Di bagian mana perangkat ditempatkan saat membangun topologi?",a:["Toolbar","Workspace","Title bar","Status akun"],k:1,e:"Workspace merupakan area kerja atau kanvas untuk menempatkan perangkat dan koneksi."},
+{c:"Antarmuka",q:"Panel perangkat biasanya berisi…",a:["Hanya dokumen teks","Hanya pengaturan suara","Router, switch, PC, laptop, dan perangkat lain","Daftar situs web"],k:2,e:"Device Panel berisi kategori perangkat jaringan dan end devices yang dapat digunakan."},
+{c:"Antarmuka",q:"Ikon petir pada toolbar digunakan untuk…",a:["Menghubungkan perangkat dengan kabel","Menghapus seluruh proyek","Membuka kalkulator","Mengganti wallpaper"],k:0,e:"Ikon Connection berbentuk petir digunakan untuk memilih koneksi dan menghubungkan perangkat."},
+{c:"Mode Simulasi",q:"Apa kelebihan Simulation Mode?",a:["Menghapus kebutuhan alamat IP","Membuat semua koneksi selalu berhasil","Menambah kapasitas RAM","Mengamati aliran paket data langkah demi langkah"],k:3,e:"Simulation Mode membantu pengguna mengontrol dan mengamati proses pengiriman paket data."},
+{c:"Kabel Jaringan",q:"Menurut panduan dasar pada modul, kabel straight-through biasa digunakan untuk menghubungkan…",a:["PC dengan PC","PC dengan switch","Switch dengan switch saja","Router dengan router saja"],k:1,e:"Modul menjelaskan kabel straight-through untuk perangkat berbeda jenis, misalnya PC ke switch."},
+{c:"Kabel Jaringan",q:"Menurut panduan dasar pada modul, kabel crossover biasa digunakan untuk…",a:["PC ke switch","PC ke printer saja","Perangkat sejenis, misalnya PC ke PC","Menghubungkan komputer ke listrik"],k:2,e:"Modul memberi contoh kabel crossover untuk perangkat sejenis seperti PC ke PC atau switch ke switch."},
+{c:"Topologi",q:"Topologi peer-to-peer pada contoh modul menghubungkan…",a:["Dua PC secara langsung tanpa perangkat pusat","Banyak router ke internet","PC ke switch pusat saja","Semua perangkat membentuk lingkaran"],k:0,e:"Topologi peer-to-peer menghubungkan dua perangkat secara langsung tanpa switch atau router sebagai pusat."},
+{c:"Topologi",q:"Pada topologi star, perangkat-perangkat terhubung ke…",a:["Satu jalur backbone saja","Sebuah lingkaran tertutup","Banyak koneksi langsung ke semua perangkat","Satu perangkat pusat, biasanya switch"],k:3,e:"Topologi star menghubungkan beberapa perangkat ke perangkat pusat, biasanya switch."},
+{c:"Pengujian",q:"Perintah apa yang digunakan untuk menguji konektivitas antarperangkat pada modul?",a:["delete","ping","format","rename"],k:1,e:"Perintah ping digunakan untuk menguji apakah perangkat tujuan dapat dijangkau."},
+{c:"Konfigurasi Router",q:"Perintah CLI untuk masuk ke mode konfigurasi global adalah…",a:["ping","no shutdown","configure terminal","ipconfig"],k:2,e:"Setelah perintah enable, configure terminal digunakan untuk masuk ke mode konfigurasi global."},
+{c:"Konfigurasi Router",q:"Apa fungsi perintah no shutdown pada antarmuka router?",a:["Mengaktifkan antarmuka agar tidak dalam keadaan shutdown","Menghapus alamat IP","Menutup aplikasi Packet Tracer","Mengganti nama komputer"],k:0,e:"Pada contoh konfigurasi modul, no shutdown digunakan untuk mengaktifkan antarmuka router."}
+];
+let order=[], idx=0, time=13, interval=null, chosen=null, answersLog=[], locked=false;
+const $=id=>document.getElementById(id);
+function shuffle(arr){return arr.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1])}
+$("startBtn").onclick=()=>{order=shuffle([...questions]);idx=0;answersLog=[];$("intro").classList.add("hidden");$("result").classList.add("hidden");$("quiz").classList.remove("hidden");showQuestion()};
+function showQuestion(){
+clearInterval(interval);time=13;chosen=null;locked=false;
+$("feedback").classList.add("hidden");$("nextBtn").classList.add("hidden");$("hint").textContent="Pilih satu jawaban yang paling tepat.";
+const item=order[idx];$("counter").textContent=`SOAL ${idx+1} DARI ${order.length}`;$("progressFill").style.width=`${idx/order.length*100}%`;$("category").textContent=item.c.toUpperCase();$("question").textContent=item.q;$("timeText").textContent=time;$("timer").classList.remove("urgent");
+$("answers").innerHTML="";
+item.a.forEach((label,i)=>{const b=document.createElement("button");b.className="answer";b.innerHTML=`<span class="letter">${String.fromCharCode(65+i)}</span><span>${label}</span>`;b.onclick=()=>selectAnswer(i);$("answers").appendChild(b)});
+interval=setInterval(()=>{time--;$("timeText").textContent=time;if(time<=5)$("timer").classList.add("urgent");if(time<=0){clearInterval(interval);if(!locked)selectAnswer(-1,true)}},1000);
+}
+function selectAnswer(n,timeout=false){
+if(locked)return;locked=true;clearInterval(interval);const item=order[idx];chosen=n;const correct=n===item.k;
+[...$("answers").children].forEach((b,i)=>{b.disabled=true;if(i===item.k)b.classList.add("correct");if(i===n&&n!==item.k)b.classList.add("wrong")});
+answersLog.push({q:item.q,selected:n,correct:item.k,explanation:item.e,options:item.a});
+$("feedback").classList.remove("hidden");$("feedback").innerHTML=timeout?`⏱️ <strong>Waktu habis!</strong> Jawaban yang benar: <strong>${String.fromCharCode(65+item.k)}. ${item.a[item.k]}</strong><br>${item.e}`:correct?`✨ <strong>Benar!</strong> Jawabanmu tepat.<br>${item.e}`:`💡 <strong>Belum tepat.</strong> Jawaban benar: <strong>${String.fromCharCode(65+item.k)}. ${item.a[item.k]}</strong><br>${item.e}`;
+$("hint").textContent=correct?"Mantap! Lanjut ke soal berikutnya.":"Pelajari pembahasannya, lalu lanjut.";
+$("nextBtn").textContent=idx===order.length-1?"Lihat Hasil 🏆":"Soal Berikutnya →";$("nextBtn").classList.remove("hidden");
+}
+$("nextBtn").onclick=()=>{if(!locked)return;idx++;if(idx>=order.length)showResult();else showQuestion()};
+function showResult(){
+clearInterval(interval);$("quiz").classList.add("hidden");$("result").classList.remove("hidden");
+const correct=answersLog.filter(x=>x.selected===x.correct).length;const score=Math.round(correct/order.length*100);
+const title=score>=90?"Luar biasa!":score>=75?"Kerja bagus!":score>=60?"Terus berlatih!":"Jangan menyerah!";
+const emoji=score>=90?"🏆":score>=75?"🎉":score>=60?"🚀":"💡";
+let review=answersLog.map((x,i)=>`<div class="review-item"><strong>${i+1}. ${x.q}</strong><p class="${x.selected===x.correct?'good':'bad'}">${x.selected===x.correct?'✓ Jawabanmu benar':x.selected<0?'⏱ Waktu habis':'✕ Jawabanmu: '+x.options[x.selected]}</p><p class="good">Jawaban benar: ${String.fromCharCode(65+x.correct)}. ${x.options[x.correct]}</p><p>${x.explanation}</p></div>`).join("");
+$("result").innerHTML=`<div class="trophy">${emoji}</div><div class="eyebrow">QUIZ SELESAI</div><h1 style="font-size:clamp(30px,6vw,44px)">${title}</h1><div class="score">${score}<span style="font-size:25px">/100</span></div><p>Kamu menjawab benar <strong style="color:var(--text)">${correct} dari ${order.length}</strong> pertanyaan.<br>${score>=75?'Pemahamanmu sudah cukup baik. Pertahankan!':'Coba pelajari lagi materi dan pembahasan di bawah ini.'}</p><div class="stats"><div class="stat"><b class="good">${correct}</b><span>Benar</span></div><div class="stat"><b class="bad">${order.length-correct}</b><span>Salah / Terlewat</span></div><div class="stat"><b>${order.length}</b><span>Total soal</span></div></div><button class="primary" id="retryBtn">Main Lagi ↻</button><div class="review"><h3>📘 Pembahasan Jawaban</h3>${review}</div>`;
+$("retryBtn").onclick=()=>{$("result").classList.add("hidden");$("intro").classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})};
+$("progressFill").style.width="100%";window.scrollTo({top:0,behavior:"smooth"});
+}
+</script>
+</body>
+</html>
